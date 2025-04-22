@@ -1,0 +1,34 @@
+From 80b1aa5dc9d08b10b31e1f6c6da83c6a54556bf1 Mon Sep 17 00:00:00 2001
+From: Leo Chung <gewalalb@gmail.com>
+Date: Tue, 29 Oct 2024 16:00:37 +0800
+Subject: [PATCH] unix: modify heapsize and stacksize
+
+---
+ ports/unix/main.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/ports/unix/main.c b/ports/unix/main.c
+index a5db0869d..29b981240 100644
+--- a/ports/unix/main.c
++++ b/ports/unix/main.c
+@@ -59,7 +59,7 @@ STATIC uint emit_opt = MP_EMIT_OPT_NONE;
+ #if MICROPY_ENABLE_GC
+ // Heap size of GC heap (if enabled)
+ // Make it larger on a 64 bit machine, because pointers are larger.
+-long heap_size = 1024 * 1024 * (sizeof(mp_uint_t) / 4);
++long heap_size = CONFIG_INTERPRETERS_MICROPYTHON_HEAPSIZE;
+ #endif
+ 
+ STATIC void stderr_print_strn(void *env, const char *str, size_t len) {
+@@ -452,7 +452,7 @@ MP_NOINLINE int main_(int argc, char **argv) {
+     #endif
+ 
+     // Define a reasonable stack limit to detect stack overflow.
+-    mp_uint_t stack_limit = 40000 * (sizeof(void *) / 4);
++    mp_uint_t stack_limit = CONFIG_INTERPRETERS_MICROPYTHON_STACKSIZE;
+     #if defined(__arm__) && !defined(__thumb2__)
+     // ARM (non-Thumb) architectures require more stack.
+     stack_limit *= 2;
+-- 
+2.45.2
+
